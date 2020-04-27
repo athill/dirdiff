@@ -1,0 +1,21 @@
+{
+  "name": "dirdiff",
+  "version": "1.0.0",
+  "description": "Compare two directories",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dir",
+    "directory",
+    "diff",
+    "compare"
+  ],
+  "author": "andy hill <andy@andyhill.us>",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "4.0.0",
+    "readline-sync": "1.4.10"
+  }
+}
