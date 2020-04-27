@@ -4,21 +4,20 @@ const { lstatSync } = require('fs');
 const path = require('path');
 const reader = require("readline-sync"); //npm install readline-sync
 
-
-
 const usage = 'Usage: dirdiff <fromDir> <toDir>';
 
 const error = (message) => console.error(chalk.red(message));
 
-// validate
+// validate and parse args
 if (process.argv.length !== 4) {
     console.log(usage);
     process.exit(1);
 };
 
-//
+
 let [ , , fromDir, toDir ]  = process.argv;
 
+// helpers
 const hasTree = (() => {
     try {
         execSync('which tree');
@@ -27,10 +26,6 @@ const hasTree = (() => {
         return false;
     }
 })();
-
-
-
-
 
 const isDir = (path) => lstatSync(path).isDirectory();
 const question = (options) => {
@@ -61,14 +56,14 @@ try {
 }
 diff = diff.toString().split('\n');
 
-// Only in wimf/database/seeds: UsersTableSeeder.php
-
 const filesRegex = /Only in ([^:]+): (.*)/;
 
 let dirOptions = [{ label: 'List', char: 'l'}];
 if (hasTree) {
     dirOptions.push({ label: 'Tree', char: 't' });
 }
+
+// parse diff
 diff.forEach(line => {
     if (line.startsWith('Files ')) {
         // console.log('File')
@@ -95,6 +90,4 @@ diff.forEach(line => {
 
     } 
 });
-
-// console.log(diff);
 
