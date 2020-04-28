@@ -56,7 +56,8 @@ try {
 }
 diff = diff.toString().split('\n');
 
-const filesRegex = /Only in ([^:]+): (.*)/;
+const onlyInRegex = /Only in ([^:]+): (.*)/;
+const filesRegex = /Files (\S+) and (\S+) differ/;
 
 let dirOptions = [{ label: 'List', char: 'l'}];
 if (hasTree) {
@@ -66,27 +67,38 @@ if (hasTree) {
 // parse diff
 diff.forEach(line => {
     if (line.startsWith('Files ')) {
-        // console.log('File')
-    } else if (line.startsWith('Only in ')) {
-        const currentPath = line.replace(filesRegex, (match, p1, p2) => path.join(p1, p2));
-        const colorer = currentPath.startsWith(`${fromDir}/`) ? chalk.yellow : chalk.green;
-        console.log(colorer(line));
-        if (isDir(currentPath)) {
-            console.log(chalk.blue(`${currentPath} is a dir`));
-            const response = question(dirOptions);
-            let content;
-            if (response === 'l') {
-                console.log(execSync(`ls ${currentPath}`).toString());
-            } else if (response === 't') {
-                console.log(execSync(`tree ${currentPath}`).toString());
-            }
-        } else {
-            const view = question([{ label: 'View File', char: 'v'}]) === 'v';
-            if (view) {
-                const contents = execSync(`cat ${currentPath}`).toString();
-                console.log(contents);
-            }
+        const [fromFile, toFile] = line.replace(filesRegex, (match, p1, p2) => [p1, p2]).split(',');
+        console.log('Files', chalk.yellow(fromFile), 'and', chalk.green(toFile), 'differ.');
+        const response = question([{ label: 'View Diff', char: 'v' }]);
+        let diff;
+        if (response === 'v') {
+            try {
+                diff = execSync(`diff ${fromFile} ${toFile}`);
+            } catch (err) {
+                diff = err.stdout;
+            }            
+            console.log(diff.toString());
         }
+    // } else if (line.startsWith('Only in ')) {
+    //     const currentPath = line.replace(onlyInRegex, (match, p1, p2) => path.join(p1, p2));
+    //     const colorer = currentPath.startsWith(`${fromDir}/`) ? chalk.yellow : chalk.green;
+    //     console.log(colorer(line));
+    //     if (isDir(currentPath)) {
+    //         console.log(chalk.blue(`${currentPath} is a dir`));
+    //         const response = question(dirOptions);
+    //         let content;
+    //         if (response === 'l') {
+    //             console.log(execSync(`ls ${currentPath}`).toString());
+    //         } else if (response === 't') {
+    //             console.log(execSync(`tree ${currentPath}`).toString());
+    //         }
+    //     } else {
+    //         const view = question([{ label: 'View File', char: 'v'}]) === 'v';
+    //         if (view) {
+    //             const contents = execSync(`cat ${currentPath}`).toString();
+    //             console.log(contents);
+    //         }
+    //     }
 
     } 
 });
