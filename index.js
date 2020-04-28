@@ -79,27 +79,26 @@ diff.forEach(line => {
             }            
             console.log(diff.toString());
         }
-    // } else if (line.startsWith('Only in ')) {
-    //     const currentPath = line.replace(onlyInRegex, (match, p1, p2) => path.join(p1, p2));
-    //     const colorer = currentPath.startsWith(`${fromDir}/`) ? chalk.yellow : chalk.green;
-    //     console.log(colorer(line));
-    //     if (isDir(currentPath)) {
-    //         console.log(chalk.blue(`${currentPath} is a dir`));
-    //         const response = question(dirOptions);
-    //         let content;
-    //         if (response === 'l') {
-    //             console.log(execSync(`ls ${currentPath}`).toString());
-    //         } else if (response === 't') {
-    //             console.log(execSync(`tree ${currentPath}`).toString());
-    //         }
-    //     } else {
-    //         const view = question([{ label: 'View File', char: 'v'}]) === 'v';
-    //         if (view) {
-    //             const contents = execSync(`cat ${currentPath}`).toString();
-    //             console.log(contents);
-    //         }
-    //     }
-
+    } else if (line.startsWith('Only in ')) {
+        const currentPath = line.replace(onlyInRegex, (match, p1, p2) => path.join(p1, p2));
+        const colorer = currentPath.startsWith(`${fromDir}/`) ? chalk.yellow : chalk.green;
+        console.log(colorer(line));
+        if (isDir(currentPath)) {
+            console.log(chalk.blue(`${currentPath} is a dir`));
+            const response = question(dirOptions);
+            let content;
+            if (response === 'l') {
+                console.log(execSync(`ls ${currentPath}`).toString());
+            } else if (response === 't') {
+                console.log(execSync(`tree ${currentPath}`).toString());
+            }
+        } else {
+            const view = question([{ label: 'View File', char: 'v'}]) === 'v';
+            if (view) {
+                const contents = execSync(`cat ${currentPath}`).toString();
+                console.log(contents);
+            }
+        }
     } 
 });
 
