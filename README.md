@@ -7,3 +7,5 @@ Intereactive review of differences between directories
 ```
 dirdiff <fromDir> <toDir>
 ```
+
+something else
